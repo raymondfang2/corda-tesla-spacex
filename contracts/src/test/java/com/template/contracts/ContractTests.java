@@ -1,6 +1,6 @@
 package com.template.contracts;
 
-import com.template.states.TemplateState;
+import com.template.states.IOUState;
 import net.corda.core.identity.CordaX500Name;
 import net.corda.testing.core.TestIdentity;
 import net.corda.testing.node.MockServices;
@@ -18,17 +18,17 @@ public class ContractTests {
 
     @Test
     public void issuerAndRecipientCannotHaveSameEmail() {
-        TemplateState state = new TemplateState("Hello-World",alice.getParty(),bob.getParty());
+        IOUState state = new IOUState(10,alice.getParty(),bob.getParty());
         ledger(ledgerServices, l -> {
             l.transaction(tx -> {
-                tx.input(TemplateContract.ID, state);
-                tx.output(TemplateContract.ID, state);
-                tx.command(alice.getPublicKey(), new TemplateContract.Commands.Send());
+                tx.input(IOUContract.ID, state);
+                tx.output(IOUContract.ID, state);
+                tx.command(alice.getPublicKey(), new IOUContract.Commands.Send());
                 return tx.fails(); //fails because of having inputs
             });
             l.transaction(tx -> {
-                tx.output(TemplateContract.ID, state);
-                tx.command(alice.getPublicKey(), new TemplateContract.Commands.Send());
+                tx.output(IOUContract.ID, state);
+                tx.command(alice.getPublicKey(), new IOUContract.Commands.Send());
                 return tx.verifies();
             });
             return null;

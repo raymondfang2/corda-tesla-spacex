@@ -1,0 +1,3 @@
+start ShipmentFlow model: Cybertruck, owner: ""
+
+run vaultQuery ContractStateType: com.template.states.CarState

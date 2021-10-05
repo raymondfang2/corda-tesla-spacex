@@ -1,6 +1,6 @@
 package com.template.states;
 
-import com.template.contracts.TemplateContract;
+import com.template.contracts.IOUContract;
 import net.corda.core.contracts.BelongsToContract;
 import net.corda.core.contracts.ContractState;
 import net.corda.core.identity.AbstractParty;
@@ -12,30 +12,30 @@ import java.util.List;
 // *********
 // * State *
 // *********
-@BelongsToContract(TemplateContract.class)
-public class TemplateState implements ContractState {
+@BelongsToContract(IOUContract.class)
+public class IOUState implements ContractState {
 
     //private variables
-    private String msg;
-    private Party sender;
-    private Party receiver;
+    private final int value;
+    private final Party lender;
+    private final Party borrower;
 
     /* Constructor of your Corda state */
-    public TemplateState(String msg, Party sender, Party receiver) {
-        this.msg = msg;
-        this.sender = sender;
-        this.receiver = receiver;
+    public IOUState(int value, Party lender, Party borrower) {
+        this.value = value;
+        this.lender = lender;
+        this.borrower = borrower;
     }
 
     //getters
-    public String getMsg() { return msg; }
-    public Party getSender() { return sender; }
-    public Party getReceiver() { return receiver; }
+    public int getValue() { return value; }
+    public Party getLender() { return lender; }
+    public Party getBorrower() { return borrower; }
 
     /* This method will indicate who are the participants and required signers when
      * this state is used in a transaction. */
     @Override
     public List<AbstractParty> getParticipants() {
-        return Arrays.asList(sender,receiver);
+        return Arrays.asList(lender,borrower);
     }
 }

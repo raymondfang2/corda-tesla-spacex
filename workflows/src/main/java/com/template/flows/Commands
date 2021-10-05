@@ -1,0 +1,11 @@
+-----Run------
+./gradlew clean deployNodes
+
+./build/nodes/runnodes
+
+----Run Flow--------
+
+start ShipmentFlow model: Cybertruck, owner: "O=SpaceX,L=Hawthorne,C=US"
+
+run vaultQuery contractStateType: com.template.states.CarState
+

@@ -1,19 +1,24 @@
 package com.template;
 
 import com.google.common.collect.ImmutableList;
-import com.template.flows.TemplateFlow;
-import com.template.states.TemplateState;
+import com.template.flows.IOUFlow;
+import com.template.states.IOUState;
+import net.corda.core.concurrent.CordaFuture;
 import net.corda.core.node.services.Vault;
+import net.corda.core.node.services.vault.IQueryCriteriaParser;
 import net.corda.core.node.services.vault.QueryCriteria;
 import net.corda.core.transactions.SignedTransaction;
 import net.corda.testing.node.MockNetwork;
 import net.corda.testing.node.MockNetworkParameters;
 import net.corda.testing.node.StartedMockNode;
 import net.corda.testing.node.TestCordapp;
+import org.jetbrains.annotations.NotNull;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import javax.persistence.criteria.Predicate;
+import java.util.Collection;
 import java.util.concurrent.Future;
 
 public class FlowTests {
@@ -38,13 +43,15 @@ public class FlowTests {
 
     @Test
     public void dummyTest() {
-        TemplateFlow.TemplateFlowInitiator flow = new TemplateFlow.TemplateFlowInitiator(b.getInfo().getLegalIdentities().get(0));
-        Future<SignedTransaction> future = a.startFlow(flow);
+        IOUFlow flow = new IOUFlow(10, b.getInfo().getLegalIdentities().get(0));
+        CordaFuture future = a.startFlow(flow);
         network.runNetwork();
 
         //successful query means the state is stored at node b's vault. Flow went through.
-        QueryCriteria inputCriteria = new QueryCriteria.VaultQueryCriteria().withStatus(Vault.StateStatus.UNCONSUMED);
-        TemplateState state = b.getServices().getVaultService()
-                .queryBy(TemplateState.class,inputCriteria).getStates().get(0).getState().getData();
+        QueryCriteria.VaultQueryCriteria inputCriteria = new QueryCriteria.VaultQueryCriteria().withStatus(Vault.StateStatus.UNCONSUMED);
+
+
+//        IOUState state = b.getServices().getVaultService()
+//                .queryBy(IOUState.class,inputCriteria).getStates().get(0).getState().getData();
     }
 }
