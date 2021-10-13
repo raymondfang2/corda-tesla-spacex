@@ -1,8 +1,10 @@
 package com.template;
 
+import com.template.flows.ShipmentFlow;
 import net.corda.client.rpc.CordaRPCClient;
 import net.corda.client.rpc.CordaRPCConnection;
 import net.corda.core.identity.CordaX500Name;
+import net.corda.core.identity.Party;
 import net.corda.core.messaging.CordaRPCOps;
 import net.corda.core.node.NodeInfo;
 import net.corda.core.utilities.NetworkHostAndPort;
@@ -42,6 +44,10 @@ public class Client {
         System.out.println("\n-- Here is the node info of the node that the client connected to --");
         logger.info("{}", name);
 
+        //How to start a flow - Raymond
+        NodeInfo spaceX = nodes.get(2);
+        Party owner = spaceX.getLegalIdentities().get(0);
+        proxy.startFlowDynamic(ShipmentFlow.class,"Cybertruck",owner);
         //Close the client connection
         clientConnection.close();
 
