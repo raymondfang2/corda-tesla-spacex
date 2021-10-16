@@ -1,9 +1,13 @@
 package com.template.webserver;
 
 import com.template.flows.ShipmentFlow;
+import com.template.states.CarState;
+import net.corda.core.contracts.StateAndRef;
 import net.corda.core.identity.Party;
 import net.corda.core.messaging.CordaRPCOps;
+import net.corda.core.messaging.StateMachineInfo;
 import net.corda.core.node.NodeInfo;
+import net.corda.core.node.services.Vault;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -49,5 +53,17 @@ public class Controller {
         Party owner = spaceX.getLegalIdentities().get(0);
         proxy.startFlowDynamic(ShipmentFlow.class,"Cybertruck",owner);
         return "Start....";
+    }
+
+    @GetMapping("/getState")
+    List<String> getCarState() {
+        Vault.Page<CarState> pages = proxy.vaultQuery(com.template.states.CarState.class);
+        List<StateAndRef<CarState>> states = pages.getStates();
+        List<String> result = new ArrayList<>(states.size());
+        for (int i=0; i<states.size(); i++) {
+            result.add(states.get(i).getState().getData().getModel()
+                    +"=>"+states.get(i).getState().getData().getOwner());
+        }
+        return result;
     }
 }
